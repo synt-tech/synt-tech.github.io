@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>synt.tech</title>
+    <style>
+        @font-face {
+            font-family: '8-bit Operator';
+            src: url('8bitOperatorPlus8-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121212;
+            font-family: '8-bit Operator', monospace;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 28px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .logo {
+            max-width: 90%;
+            height: auto;
+            margin-bottom: 0px;
+        }
+
+        p {
+            color: transparent;
+            text-shadow: 0 0 0 #C1A100,
+                /* #ffd700 */
+                -0.4px -0.4px 0 #a020f0,
+                0.4px -0.4px 0 #a020f0,
+                -0.4px 0.4px 0 #a020f0,
+                0.4px 0.4px 0 #a020f0,
+                -0.4px 0 0 #a020f0,
+                0.4px 0 0 #a020f0,
+                0 -0.4px 0 #a020f0,
+                0 0.4px 0 #a020f0;
+        }
+
+        .token-text {
+            position: relative;
+            height: 150px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: left;
+            margin-top: 0em;
+        }
+
+        .center {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            margin: 0;
+        }
+
+        .left {
+            left: 120px;
+        }
+
+        .token-text img {
+            height: 100px;
+            /* 4 times the line-height of the text */
+            width: auto;
+            margin-right: 0.5em;
+            align-self: center;
+            width: 100px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 250px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="synt_tech_100c.png"
+            alt="synt.tech" class="logo">
+        <p>synthetic tokens pegged to tradfi assets. </p>
+        <br>
+        <p>synt.tech tokens are hard-pegged to tradfi assets by centralised algorithmic market making, though will be
+            pegged by a decentralized algo in the future.</p>
+        <p>our tokens are <u>not backed by the tradfi assets they track, nor redeemable</u>, and never will be.</p>
+
+        <div class="token-text">
+            <img src="sUSD_100c.png"
+                alt="sUSD">
+            <p class="center left">
+                <u>synthetic USD</u> <br>
+                Stellar DEX:
+                <a href="https://stellar.expert/explorer/public/asset/sUSD-GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH">Stellar Expert</a>,
+                <a href="https://www.stellarx.com/markets/sUSD:GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH/AQUA:GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA">StellarX</a>,
+                <a href="https://lobstr.co/trade/sUSD:GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH/AQUA:GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA/">Lobstr</a>,
+                <a href="https://aqua.network/vote/?sort=top">AQUA vote</a>
+                <br>
+                support for another blockchain coming soon...
+            </p>
+        </div>
+
+        <div class="token-text">
+            <img src="next_c_35p.png"
+                alt="next synt.tech token">
+            <p class="center left">next synt.tech token coming soon...</p>
+        </div>
+    </div>
+</body>
+
+</html>
