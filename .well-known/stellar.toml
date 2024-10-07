@@ -1,4 +1,5 @@
 NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
+ACCOUNTS = ["GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH"]
 
 [DOCUMENTATION]
 ORG_NAME = "synt.tech"
@@ -6,7 +7,6 @@ ORG_URL = "https://synt.tech"
 ORG_LOGO = "https://synt.tech/synt_tech_100c.png"
 ORG_OFFICIAL_EMAIL = "hi@synt.tech"
 ORG_DESCRIPTION = "synt.tech issues synthetic assets pegged to tradfi assets"
-
 
 [[CURRENCIES]]
 code = "sUSD"
