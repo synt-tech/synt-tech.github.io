@@ -1,9 +1,8 @@
-<html>
-<head>
-  <meta http-equiv="content-type" content="text/plain; charset=UTF-8">
-</head>
-<body>
-<pre>
+---
+layout: none
+permalink: /.well-known/stellar.toml
+---
+
 NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
 ACCOUNTS = ["GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH"]
 
