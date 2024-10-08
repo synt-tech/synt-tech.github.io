@@ -23,6 +23,3 @@ desc = "a synthetic USD asset on the Stellar network, price-pegged to USD but no
 conditions = "this asset is not redeemable for actual USD, instead it tracks the price of USD."
 anchor_asset_type = "other"
 anchor_asset = "USD"
-</pre>
-</body>
-</html>
