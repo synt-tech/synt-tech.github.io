@@ -28,6 +28,8 @@
             font-size: 28px;
             display: flex;
             flex-direction: column;
+            position: relative;  /* Added for absolute positioning context */
+            overflow-x: hidden;  /* Prevent horizontal scroll */
         }
 
         .container {
@@ -35,6 +37,35 @@
             margin: 0 auto;
             padding: 20px;
             flex-grow: 1;
+            position: relative;  /* For z-index stacking */
+            z-index: 2;         /* Place above background text */
+        }
+
+
+        .background-text {
+            position: fixed;    /* Fixed positioning */
+            pointer-events: none; /* Don't interfere with clicks */
+            z-index: 1;         /* Behind main content */
+            opacity: 0.15;       /* Make it subtle */
+            /* Inherit the same text style as other paragraphs */
+            color: transparent;
+            text-shadow: 0 0 0 #C1A100,
+                -0.4px -0.4px 0 #a020f0,
+                0.4px -0.4px 0 #a020f0,
+                -0.4px 0.4px 0 #a020f0,
+                0.4px 0.4px 0 #a020f0,
+                -0.4px 0 0 #a020f0,
+                0.4px 0 0 #a020f0,
+                0 -0.4px 0 #a020f0,
+                0 0.4px 0 #a020f0;
+            /* Add transform-origin for better rotation */
+            transform-origin: center center;
+            /* Add width and height for collision detection */
+            width: 300px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .logo {
@@ -42,6 +73,7 @@
             height: auto;
             margin-bottom: 0px;
         }
+
 
         p {
             color: transparent;
@@ -92,6 +124,9 @@
 </head>
 
 <body>
+    <!-- Background text container -->
+    <div id="backgroundTextContainer"></div>
+
     <div class="container">
         <img src="synt_tech_100c.png"
             alt="synt.tech" class="logo">
@@ -122,6 +157,85 @@
             <p class="center left">next synt.tech token coming soon...</p>
         </div>
     </div>
+
+    <script>
+        class TextPosition {
+            constructor(x, y, width, height) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+            }
+
+            // Check if this position overlaps with another
+            overlaps(other) {
+                // Add padding around boxes for better spacing
+                const padding = 50;
+                return !(this.x + this.width + padding < other.x ||
+                        this.x > other.x + other.width + padding ||
+                        this.y + this.height + padding < other.y ||
+                        this.y > other.y + other.height + padding);
+            }
+        }
+
+        function createBackgroundTexts() {
+            const container = document.getElementById('backgroundTextContainer');
+            container.innerHTML = ''; // Clear existing texts
+            
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const textWidth = 300; // Width of text element
+            const textHeight = 50; // Height of text element
+            
+            // Generate random rotation between -45 and 45 degrees
+            const rotation = Math.random() * 90 - 45;
+            
+            const positions = [];
+            let attempts = 0;
+            const maxAttempts = 100; // Prevent infinite loops
+            const numBackgroundText = 7
+            
+            // Create text elements
+            while (positions.length < numBackgroundText && attempts < maxAttempts) {
+                const randomX = Math.random() * (viewportWidth - textWidth);
+                const randomY = Math.random() * (viewportHeight - textHeight);
+                
+                const newPosition = new TextPosition(randomX, randomY, textWidth, textHeight);
+                
+                // Check if this position overlaps with any existing positions
+                let overlaps = false;
+                for (const position of positions) {
+                    if (newPosition.overlaps(position)) {
+                        overlaps = true;
+                        break;
+                    }
+                }
+                
+                if (!overlaps) {
+                    positions.push(newPosition);
+                    
+                    const textElement = document.createElement('div');
+                    textElement.className = 'background-text';
+                    textElement.textContent = 'yield% coming soon!';
+                    textElement.style.left = `${randomX}px`;
+                    textElement.style.top = `${randomY}px`;
+                    textElement.style.transform = `rotate(${rotation}deg)`;
+                    
+                    container.appendChild(textElement);
+                }
+                
+                attempts++;
+            }
+        }
+
+        // Initial creation
+        createBackgroundTexts();
+
+        // Recreate on window resize
+        window.addEventListener('resize', createBackgroundTexts);
+        window.addEventListener('load', createBackgroundTexts);
+    </script>
 </body>
+
 
 </html>
