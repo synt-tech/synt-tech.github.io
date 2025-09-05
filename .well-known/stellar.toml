@@ -8,6 +8,8 @@ ORG_LOGO = "https://synt.tech/synt_tech_100c.png"
 ORG_OFFICIAL_EMAIL = "hi@synt.tech"
 ORG_PHYSICAL_ADDRESS = "Marshall Islands"
 ORG_DESCRIPTION = "synt.tech issues synthetic assets pegged to tradfi assets"
+ORG_TWITTER="synt_tech"
+
 
 [[CURRENCIES]]
 code = "sUSD"
