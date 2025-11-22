@@ -13,9 +13,12 @@
             font-style: normal;
         }
 
-        html,
-        body {
+        html {
             height: 100%;
+        }
+
+        body {
+            min-height: 100%;
             margin: 0;
             padding: 0;
         }
@@ -35,7 +38,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 80px 50px 20px 50px;
             flex-grow: 1;
             position: relative;  /* For z-index stacking */
             z-index: 2;         /* Place above background text */
@@ -120,10 +123,115 @@
             object-position: center;
             border-radius: 250px;
         }
+
+        .cookie-banner {
+            position: fixed;
+            bottom: -120px; /* Start hidden below screen */
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            z-index: 1000;
+            /* Match body text style */
+            font-size: 28px;
+            color: transparent;
+            text-shadow: 0 0 0 #C1A100,
+                -0.4px -0.4px 0 #a020f0,
+                0.4px -0.4px 0 #a020f0,
+                -0.4px 0.4px 0 #a020f0,
+                0.4px 0.4px 0 #a020f0,
+                -0.4px 0 0 #a020f0,
+                0.4px 0 0 #a020f0,
+                0 -0.4px 0 #a020f0,
+                0 0.4px 0 #a020f0;
+        }
+
+        .cookie-banner.show {
+            bottom: 10px;
+        }
+
+        .cookie-banner img {
+            height: 80px;
+            width: auto;
+            margin: 0 20px; /* Spacing on both sides */
+            vertical-align: middle;
+        }
+        .site-frame {
+            position: absolute;
+            inset: 15px;
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 9999;
+            box-sizing: border-box;
+            border: 2px solid #C1A100;
+            box-shadow: 0 0 15px #C1A100, inset 0 0 15px #C1A100;
+            animation: halogen-pulse 4s infinite ease-in-out;
+        }
+
+        @keyframes halogen-pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px #C1A100, inset 0 0 10px #C1A100;
+                opacity: 0.7;
+            }
+            50% {
+                box-shadow: 0 0 30px #C1A100, inset 0 0 30px #C1A100;
+                opacity: 1;
+            }
+        }
+
+        /* Tooltip Styles */
+        .tooltip-container {
+            position: relative;
+            cursor: help;
+            border-bottom: 2px dotted #C1A100; /* Hint that it is interactive */
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 400px;
+            background-color: rgba(18, 18, 18, 0.95);
+            color: #C1A100;
+            text-align: center;
+            border-radius: 6px;
+            padding: 15px;
+            position: absolute;
+            z-index: 1001;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -200px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 2px solid #a020f0;
+            box-shadow: 0 0 15px rgba(160, 32, 240, 0.3);
+            
+            /* Font styles matching the theme */
+            font-family: '8-bit Operator', monospace;
+            font-size: 20px;
+            line-height: 1.4;
+            text-shadow: 0 0 0 #C1A100,
+                -0.4px -0.4px 0 #a020f0,
+                0.4px -0.4px 0 #a020f0,
+                -0.4px 0.4px 0 #a020f0,
+                0.4px 0.4px 0 #a020f0,
+                -0.4px 0 0 #a020f0,
+                0.4px 0 0 #a020f0,
+                0 -0.4px 0 #a020f0,
+                0 0.4px 0 #a020f0;
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 
 <body>
+    <div class="site-frame"></div>
     <!-- Background text container -->
     <div id="backgroundTextContainer"></div>
 
@@ -134,7 +242,7 @@
         <br>
         <p>synt.tech tokens are hard-pegged to tradfi assets by centralised algorithmic market making, though will be
             pegged by a decentralized algo in the future.</p>
-        <p>our tokens are <u>not backed by the tradfi assets they track, nor redeemable</u>, and never will be.</p>
+        <p>our tokens are <b>not backed by the tradfi assets they track, nor redeemable</b>, and never will be.</p>
 
         <div class="token-text">
             <img src="sUSD_100c.png"
@@ -145,8 +253,11 @@
                 <a href="https://stellar.expert/explorer/public/asset/sUSD-GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH">Stellar Expert</a>,
                 <a href="https://www.stellarx.com/markets/sUSD:GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH/AQUA:GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA">StellarX</a>,
                 <a href="https://lobstr.co/trade/sUSD:GCHW7CWI7GMIYQYFXMFJNJX5645XGWIINIAEQK3SABQO6CAYL5T7JYIH/AQUA:GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA/">Lobstr</a>,
-                <a href="https://aqua.network/pools/?tab=top&filter=all&sort=-liquidity&search=susd">Aquarius DEX</a>
-                <br>
+                <a href="https://aqua.network/pools/?tab=top&filter=all&sort=-liquidity&search=susd">Aquarius DEX</a><br>
+                <span class="tooltip-container">
+                    <b>🚀6.32% yield!🚀</b>
+                    <span class="tooltip-text">yield is send out weekly as sUSD to all Stellar wallets with an sUSD trustline holding more than 1 sUSD. Balances in wallets, classic AMM's and AQUA AMM's are all counted</span>
+                </span><br>
                 support for another blockchain coming soon...
             </p>
         </div>
@@ -156,9 +267,47 @@
                 alt="next synt.tech token">
             <p class="center left">next synt.tech token coming soon...</p>
         </div>
+        <p>meanwhile, please do stalk us on <a href="https://x.com/synt_tech">Xitter</a> </p><br>
+        <br>
+        
+    </div>
+
+    <div id="cookieBanner" class="cookie-banner">
+        <span>Me no spy with cookies...</span>
+        <img src="cookie3-gold.png" alt="Cookie">
+        <span>Me eat them!</span>
     </div>
 
     <script>
+        // Cookie Banner Logic
+        const banner = document.getElementById('cookieBanner');
+        let lastMouseY = 0;
+
+        function updateBanner() {
+            // Check if scrolled to bottom (within 20px)
+            // We use a small buffer because exact pixel matching can sometimes be off by fractional pixels
+            const isScrolledToBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 20;
+            
+            // Check if mouse is near bottom (within 150px of viewport bottom)
+            const isMouseNearBottom = lastMouseY > (window.innerHeight - 150);
+
+            if (isScrolledToBottom && isMouseNearBottom) {
+                banner.classList.add('show');
+            } else {
+                banner.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            updateBanner();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            lastMouseY = e.clientY;
+            updateBanner();
+        });
+
+        // Existing Background Text Logic
         class TextPosition {
             constructor(x, y, width, height) {
                 this.x = x;
@@ -239,5 +388,3 @@
 
 
 </html>
-
-
