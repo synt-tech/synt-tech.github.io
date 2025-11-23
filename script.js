@@ -63,15 +63,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // For touch devices, show cookie message fixed at bottom
-    if (isTouchDevice && edgeTooltip) {
-        edgeTooltip.innerHTML = cookieText;
-        edgeTooltip.style.display = 'block';
-        edgeTooltip.style.top = 'auto';
-        edgeTooltip.style.bottom = '20px';
-        edgeTooltip.style.left = '50%';
-        edgeTooltip.style.right = 'auto';
-        edgeTooltip.style.transform = 'translateX(-50%)';
+    // For touch devices, handle scroll-based visibility
+    if (isTouchDevice) {
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollThreshold = 50; // Show when within 50px of bottom
+
+            if (scrollPosition >= documentHeight - scrollThreshold) {
+                if (edgeTooltip) {
+                    edgeTooltip.innerHTML = cookieText;
+                    edgeTooltip.style.display = 'block';
+                    edgeTooltip.style.top = 'auto';
+                    edgeTooltip.style.bottom = '20px';
+                    edgeTooltip.style.left = '50%';
+                    edgeTooltip.style.right = 'auto';
+                    edgeTooltip.style.transform = 'translateX(-50%)';
+                }
+            } else {
+                if (edgeTooltip) {
+                    edgeTooltip.style.display = 'none';
+                }
+            }
+        });
     }
 });
 
