@@ -1,68 +1,59 @@
 // Cookie Banner Logic
 const banner = document.getElementById('cookieBanner');
 const edgeTooltip = document.getElementById('edgeTooltip');
-const sentinel = document.getElementById('scrollSentinel');
 
-let lastMouseY = 0;
-let isScrolledToBottom = false;
-// Detect touch devices to bypass mouse check on mobile
+// Detect touch devices
 const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-// Use IntersectionObserver for reliable scroll-to-bottom detection
-const observer = new IntersectionObserver((entries) => {
-    // Update state
-    isScrolledToBottom = entries[0].isIntersecting;
-    updateBanner();
-}, {
-    root: null,
-    rootMargin: '200px', // Generous buffer: trigger when within 200px of bottom
-    threshold: 0
-});
+function updateMouseDrivenVisibility(clientX, clientY) {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
 
-if (sentinel) {
-    observer.observe(sentinel);
-}
+    // 1. Edge Tooltips (Left/Right)
+    const sideThreshold = 25; 
+    const isNearLeft = clientX < sideThreshold;
+    const isNearRight = clientX > viewportWidth - sideThreshold;
 
-function updateBanner() {
-    // On touch devices, only check scroll. On desktop, check scroll + mouse position.
-    // For mouse: Check if near bottom (within 150px) OR if mouse hasn't moved yet (0) but we are scrolled to bottom (edge case)
-    
-    const isMouseConditionMet = isTouchDevice || (lastMouseY > (window.innerHeight - 150));
+    if (edgeTooltip) {
+        if (isNearLeft || isNearRight) {
+            edgeTooltip.style.display = 'block';
+            edgeTooltip.style.top = `${clientY + 10}px`;
+            
+            if (isNearLeft) {
+                edgeTooltip.style.left = `${clientX + 15}px`;
+                edgeTooltip.style.right = 'auto';
+            } else {
+                edgeTooltip.style.left = 'auto';
+                edgeTooltip.style.right = `${viewportWidth - clientX + 15}px`;
+            }
+        } else {
+            edgeTooltip.style.display = 'none';
+        }
+    }
 
-    if (isScrolledToBottom && isMouseConditionMet) {
+    // 2. Cookie Banner (Bottom Edge)
+    // Show if mouse is near the bottom (similar to side tooltips)
+    // OR if it's a touch device (always show since no hover)
+    const bottomThreshold = 100; // Larger target area for footer
+    const isNearBottom = clientY > (viewportHeight - bottomThreshold);
+
+    if (isNearBottom || isTouchDevice) {
         banner.classList.add('show');
     } else {
         banner.classList.remove('show');
     }
 }
 
-// Still track mouse for desktop users
+// Track mouse movement
 window.addEventListener('mousemove', (e) => {
-    lastMouseY = e.clientY;
-    updateBanner();
-
-    // Edge Tooltip Logic
-    const threshold = 25; // 15px border + 10px buffer
-    const isNearLeft = e.clientX < threshold;
-    const isNearRight = e.clientX > window.innerWidth - threshold;
-
-    if (edgeTooltip) {
-        if (isNearLeft || isNearRight) {
-            edgeTooltip.style.display = 'block';
-            edgeTooltip.style.top = `${e.clientY + 10}px`; // Slightly below cursor
-            
-            if (isNearLeft) {
-                edgeTooltip.style.left = `${e.clientX + 15}px`;
-                edgeTooltip.style.right = 'auto';
-            } else {
-                edgeTooltip.style.left = 'auto';
-                edgeTooltip.style.right = `${window.innerWidth - e.clientX + 15}px`;
-            }
-        } else {
-            edgeTooltip.style.display = 'none';
-        }
-    }
+    updateMouseDrivenVisibility(e.clientX, e.clientY);
 });
+
+// For touch devices or initial load, we might want to just ensure it's handled.
+// Since we check isTouchDevice in the logic, we can just trigger it once.
+if (isTouchDevice) {
+    banner.classList.add('show');
+}
 
 // Existing Background Text Logic
 class TextPosition {
