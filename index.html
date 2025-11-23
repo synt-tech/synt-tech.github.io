@@ -28,7 +28,7 @@
             font-family: '8-bit Operator', monospace;
             text-align: left;
             line-height: 1.6;
-            font-size: 28px;
+            font-size: 23px;
             display: flex;
             flex-direction: column;
             position: relative;  /* Added for absolute positioning context */
@@ -72,7 +72,7 @@
         }
 
         .logo {
-            max-width: 90%;
+            max-width: 43%;
             height: auto;
             margin-bottom: 0px;
         }
@@ -137,7 +137,7 @@
             transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
             z-index: 1000;
             /* Match body text style */
-            font-size: 28px;
+            font-size: 23px;
             color: transparent;
             text-shadow: 0 0 0 #C1A100,
                 -0.4px -0.4px 0 #a020f0,
@@ -210,7 +210,7 @@
             
             /* Font styles matching the theme */
             font-family: '8-bit Operator', monospace;
-            font-size: 20px;
+            font-size: 18px;
             line-height: 1.4;
             text-shadow: 0 0 0 #C1A100,
                 -0.4px -0.4px 0 #a020f0,
@@ -226,6 +226,32 @@
         .tooltip-container:hover .tooltip-text {
             visibility: visible;
             opacity: 1;
+        }
+
+        /* Edge Tooltip Styles */
+        #edgeTooltip {
+            position: fixed;
+            display: none;
+            background-color: rgba(18, 18, 18, 0.95);
+            color: #C1A100;
+            padding: 10px 15px;
+            border: 2px solid #a020f0;
+            border-radius: 6px;
+            font-family: '8-bit Operator', monospace;
+            font-size: 14px;
+            z-index: 10002;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 0 15px rgba(160, 32, 240, 0.3);
+            text-shadow: 0 0 0 #C1A100,
+                -0.4px -0.4px 0 #a020f0,
+                0.4px -0.4px 0 #a020f0,
+                -0.4px 0.4px 0 #a020f0,
+                0.4px 0.4px 0 #a020f0,
+                -0.4px 0 0 #a020f0,
+                0.4px 0 0 #a020f0,
+                0 -0.4px 0 #a020f0,
+                0 0.4px 0 #a020f0;
         }
     </style>
 </head>
@@ -256,7 +282,7 @@
                 <a href="https://aqua.network/pools/?tab=top&filter=all&sort=-liquidity&search=susd">Aquarius DEX</a><br>
                 <span class="tooltip-container">
                     <b>🚀6.32% yield!🚀</b>
-                    <span class="tooltip-text">yield is send out weekly as sUSD to all Stellar wallets with an sUSD trustline holding more than 1 sUSD. Balances in wallets, classic AMM's and AQUA AMM's are all counted</span>
+                    <span class="tooltip-text">yield is sent out weekly as sUSD to all Stellar wallets with an sUSD trustline holding more than 1 sUSD. Balances in wallets, classic AMM's and AQUA AMM's are all counted</span>
                 </span><br>
                 support for another blockchain coming soon...
             </p>
@@ -278,9 +304,12 @@
         <span>Me eat them!</span>
     </div>
 
+    <div id="edgeTooltip">☢️ WARNING: Radioactive! ☢️ <br> Keeping this website open <br> might fry your device!</div>
+
     <script>
         // Cookie Banner Logic
         const banner = document.getElementById('cookieBanner');
+        const edgeTooltip = document.getElementById('edgeTooltip');
         let lastMouseY = 0;
 
         function updateBanner() {
@@ -305,6 +334,26 @@
         window.addEventListener('mousemove', (e) => {
             lastMouseY = e.clientY;
             updateBanner();
+
+            // Edge Tooltip Logic
+            const threshold = 25; // 15px border + 10px buffer
+            const isNearLeft = e.clientX < threshold;
+            const isNearRight = e.clientX > window.innerWidth - threshold;
+
+            if (isNearLeft || isNearRight) {
+                edgeTooltip.style.display = 'block';
+                edgeTooltip.style.top = `${e.clientY + 10}px`; // Slightly below cursor
+                
+                if (isNearLeft) {
+                    edgeTooltip.style.left = `${e.clientX + 15}px`;
+                    edgeTooltip.style.right = 'auto';
+                } else {
+                    edgeTooltip.style.left = 'auto';
+                    edgeTooltip.style.right = `${window.innerWidth - e.clientX + 15}px`;
+                }
+            } else {
+                edgeTooltip.style.display = 'none';
+            }
         });
 
         // Existing Background Text Logic
