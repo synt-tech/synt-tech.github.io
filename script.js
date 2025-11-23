@@ -1,61 +1,64 @@
-// Cookie Banner Logic
-const banner = document.getElementById('cookieBanner');
-const edgeTooltip = document.getElementById('edgeTooltip');
+document.addEventListener('DOMContentLoaded', () => {
+    // Cookie Banner Logic
+    const banner = document.getElementById('cookieBanner');
+    const edgeTooltip = document.getElementById('edgeTooltip');
 
-// Detect touch devices
-const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    // Detect touch devices
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-function updateMouseDrivenVisibility(clientX, clientY) {
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    function updateMouseDrivenVisibility(clientX, clientY) {
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
-    // 1. Edge Tooltips (Left/Right)
-    const sideThreshold = 25; 
-    const isNearLeft = clientX < sideThreshold;
-    const isNearRight = clientX > viewportWidth - sideThreshold;
+        // 1. Edge Tooltips (Left/Right)
+        const sideThreshold = 25; 
+        const isNearLeft = clientX < sideThreshold;
+        const isNearRight = clientX > viewportWidth - sideThreshold;
 
-    if (edgeTooltip) {
-        if (isNearLeft || isNearRight) {
-            edgeTooltip.style.display = 'block';
-            edgeTooltip.style.top = `${clientY + 10}px`;
-            
-            if (isNearLeft) {
-                edgeTooltip.style.left = `${clientX + 15}px`;
-                edgeTooltip.style.right = 'auto';
+        if (edgeTooltip) {
+            if (isNearLeft || isNearRight) {
+                edgeTooltip.style.display = 'block';
+                edgeTooltip.style.top = `${clientY + 10}px`;
+                
+                if (isNearLeft) {
+                    edgeTooltip.style.left = `${clientX + 15}px`;
+                    edgeTooltip.style.right = 'auto';
+                } else {
+                    edgeTooltip.style.left = 'auto';
+                    edgeTooltip.style.right = `${viewportWidth - clientX + 15}px`;
+                }
             } else {
-                edgeTooltip.style.left = 'auto';
-                edgeTooltip.style.right = `${viewportWidth - clientX + 15}px`;
+                edgeTooltip.style.display = 'none';
             }
-        } else {
-            edgeTooltip.style.display = 'none';
+        }
+
+        // 2. Cookie Banner (Bottom Edge)
+        if (banner) {
+            // Show if mouse is near the bottom (similar to side tooltips)
+            // OR if it's a touch device (always show since no hover)
+            const bottomThreshold = 200; // Larger target area (200px) to be safe
+            const isNearBottom = clientY > (viewportHeight - bottomThreshold);
+
+            if (isNearBottom || isTouchDevice) {
+                banner.classList.add('show');
+            } else {
+                banner.classList.remove('show');
+            }
         }
     }
 
-    // 2. Cookie Banner (Bottom Edge)
-    // Show if mouse is near the bottom (similar to side tooltips)
-    // OR if it's a touch device (always show since no hover)
-    const bottomThreshold = 100; // Larger target area for footer
-    const isNearBottom = clientY > (viewportHeight - bottomThreshold);
+    // Track mouse movement
+    window.addEventListener('mousemove', (e) => {
+        updateMouseDrivenVisibility(e.clientX, e.clientY);
+    });
 
-    if (isNearBottom || isTouchDevice) {
+    // For touch devices, trigger immediately
+    if (isTouchDevice && banner) {
         banner.classList.add('show');
-    } else {
-        banner.classList.remove('show');
     }
-}
-
-// Track mouse movement
-window.addEventListener('mousemove', (e) => {
-    updateMouseDrivenVisibility(e.clientX, e.clientY);
 });
 
-// For touch devices or initial load, we might want to just ensure it's handled.
-// Since we check isTouchDevice in the logic, we can just trigger it once.
-if (isTouchDevice) {
-    banner.classList.add('show');
-}
-
-// Existing Background Text Logic
+// Existing Background Text Logic (remains outside DOMContentLoaded as it handles its own init)
 class TextPosition {
     constructor(x, y, width, height) {
         this.x = x;
@@ -127,9 +130,6 @@ function createBackgroundTexts() {
     }
 }
 
-// Initial creation
-createBackgroundTexts();
-
-// Recreate on window resize
-window.addEventListener('resize', createBackgroundTexts);
+// Initial creation (wait for load to ensure styles/dimensions are ready)
 window.addEventListener('load', createBackgroundTexts);
+window.addEventListener('resize', createBackgroundTexts);
