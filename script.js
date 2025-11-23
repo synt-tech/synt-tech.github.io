@@ -65,24 +65,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // For touch devices, handle scroll-based visibility
     if (isTouchDevice) {
+        let cookieBannerTimeout;
+        let isBannerVisible = false;
+        let hasFadedOut = false;
+
         window.addEventListener('scroll', () => {
             const scrollPosition = window.scrollY + window.innerHeight;
             const documentHeight = document.documentElement.scrollHeight;
             const scrollThreshold = 50; // Show when within 50px of bottom
+            
+            const isAtBottom = scrollPosition >= documentHeight - scrollThreshold;
 
-            if (scrollPosition >= documentHeight - scrollThreshold) {
-                if (edgeTooltip) {
-                    edgeTooltip.innerHTML = cookieText;
-                    edgeTooltip.style.display = 'block';
-                    edgeTooltip.style.top = 'auto';
-                    edgeTooltip.style.bottom = '20px';
-                    edgeTooltip.style.left = '50%';
-                    edgeTooltip.style.right = 'auto';
-                    edgeTooltip.style.transform = 'translateX(-50%)';
+            if (isAtBottom) {
+                // Only show if not already visible and hasn't just faded out
+                if (!isBannerVisible && !hasFadedOut) {
+                    if (edgeTooltip) {
+                        edgeTooltip.innerHTML = cookieText;
+                        edgeTooltip.style.display = 'block';
+                        edgeTooltip.style.top = 'auto';
+                        edgeTooltip.style.bottom = '20px';
+                        edgeTooltip.style.left = '50%';
+                        edgeTooltip.style.right = 'auto';
+                        edgeTooltip.style.transform = 'translateX(-50%)';
+                    }
+                    
+                    isBannerVisible = true;
+
+                    // Set timeout to hide after 5 seconds
+                    cookieBannerTimeout = setTimeout(() => {
+                        if (edgeTooltip) {
+                            edgeTooltip.style.display = 'none';
+                        }
+                        isBannerVisible = false;
+                        hasFadedOut = true; // Prevent showing again until user leaves bottom
+                    }, 5000);
                 }
             } else {
+                // User left the bottom area
                 if (edgeTooltip) {
                     edgeTooltip.style.display = 'none';
+                }
+                
+                // Reset state so it can show again next time they scroll down
+                isBannerVisible = false;
+                hasFadedOut = false; 
+                
+                if (cookieBannerTimeout) {
+                    clearTimeout(cookieBannerTimeout);
                 }
             }
         });
