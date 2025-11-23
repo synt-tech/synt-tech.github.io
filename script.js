@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Cookie Banner Logic
-    const banner = document.getElementById('cookieBanner');
+    // Edge Tooltip (handles both Radioactive warning and Cookie message)
     const edgeTooltip = document.getElementById('edgeTooltip');
+    
+    // Messages
+    const radioactiveText = '☢️ WARNING: Radioactive! ☢️ <br> Keeping this website open <br> might fry your device!';
+    const cookieText = '<div style="display: flex; align-items: center; text-align: right;"><div>Me no spy with cookies...<br>Me eat them!</div><img src="cookie3-gold-128.png" alt="Cookie" class="cookie-img"></div>';
 
     // Detect touch devices
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -10,15 +13,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
-        // 1. Edge Tooltips (Left/Right)
+        // Thresholds
         const sideThreshold = 25; 
+        const bottomThreshold = 50;
+
+        // Detection
         const isNearLeft = clientX < sideThreshold;
         const isNearRight = clientX > viewportWidth - sideThreshold;
+        const isNearBottom = clientY > viewportHeight - bottomThreshold;
 
         if (edgeTooltip) {
-            if (isNearLeft || isNearRight) {
+            if (isNearBottom) {
+                // Bottom Mode: Cookie Message
+                edgeTooltip.innerHTML = cookieText;
                 edgeTooltip.style.display = 'block';
+                
+                // Position: Fixed at bottom center
+                edgeTooltip.style.top = 'auto';
+                edgeTooltip.style.bottom = '20px';
+                edgeTooltip.style.left = '50%';
+                edgeTooltip.style.right = 'auto';
+                edgeTooltip.style.transform = 'translateX(-50%)'; // Center it
+                
+            } else if (isNearLeft || isNearRight) {
+                // Side Mode: Radioactive Warning
+                edgeTooltip.innerHTML = radioactiveText;
+                edgeTooltip.style.display = 'block';
+                edgeTooltip.style.bottom = 'auto';
                 edgeTooltip.style.top = `${clientY + 10}px`;
+                edgeTooltip.style.transform = 'none'; // Remove centering transform
                 
                 if (isNearLeft) {
                     edgeTooltip.style.left = `${clientX + 15}px`;
@@ -31,30 +54,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 edgeTooltip.style.display = 'none';
             }
         }
-
-        // 2. Cookie Banner (Bottom Edge)
-        if (banner) {
-            // Show if mouse is near the bottom (similar to side tooltips)
-            // OR if it's a touch device (always show since no hover)
-            const bottomThreshold = 200; // Larger target area (200px) to be safe
-            const isNearBottom = clientY > (viewportHeight - bottomThreshold);
-
-            if (isNearBottom || isTouchDevice) {
-                banner.style.display = 'flex';
-            } else {
-                banner.style.display = 'none';
-            }
-        }
     }
 
     // Track mouse movement
     window.addEventListener('mousemove', (e) => {
-        updateMouseDrivenVisibility(e.clientX, e.clientY);
+        if (!isTouchDevice) {
+            updateMouseDrivenVisibility(e.clientX, e.clientY);
+        }
     });
 
-    // For touch devices, trigger immediately
-    if (isTouchDevice && banner) {
-        banner.style.display = 'flex';
+    // For touch devices, show cookie message fixed at bottom
+    if (isTouchDevice && edgeTooltip) {
+        edgeTooltip.innerHTML = cookieText;
+        edgeTooltip.style.display = 'block';
+        edgeTooltip.style.top = 'auto';
+        edgeTooltip.style.bottom = '20px';
+        edgeTooltip.style.left = '50%';
+        edgeTooltip.style.right = 'auto';
+        edgeTooltip.style.transform = 'translateX(-50%)';
     }
 });
 

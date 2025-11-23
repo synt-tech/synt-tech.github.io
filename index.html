@@ -130,41 +130,6 @@
             border-radius: 250px;
         }
 
-        .cookie-banner {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
-            
-            /* Initially hidden, toggled via JS display property like tooltips */
-            display: none;
-            
-            align-items: center;
-            justify-content: center;
-            padding: 5px 0;
-            z-index: 10001;
-            
-            /* Match body text style */
-            font-size: 23px;
-            color: transparent;
-            text-shadow: 0 0 0 #C1A100,
-                -0.4px -0.4px 0 #a020f0,
-                0.4px -0.4px 0 #a020f0,
-                -0.4px 0.4px 0 #a020f0,
-                0.4px 0.4px 0 #a020f0,
-                -0.4px 0 0 #a020f0,
-                0.4px 0 0 #a020f0,
-                0 -0.4px 0 #a020f0,
-                0 0.4px 0 #a020f0;
-        }
-
-        .cookie-banner img {
-            height: 80px;
-            width: auto;
-            margin: 0 20px; /* Spacing on both sides */
-            vertical-align: middle;
-        }
         .site-frame {
             position: absolute;
             inset: 15px;
@@ -257,15 +222,24 @@
                 0.4px 0 0 #a020f0,
                 0 -0.4px 0 #a020f0,
                 0 0.4px 0 #a020f0;
+            
+            /* Ensure flex alignment for when image is present */
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* Image style for the cookie in the tooltip */
+        .cookie-img {
+            height: 65px; /* Increased size by ~30% */
+            width: auto;
+            vertical-align: middle;
+            margin-left: 15px; /* Space between text and image */
         }
 
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             body {
-                font-size: 20px;
-            }
-
-            .cookie-banner {
                 font-size: 20px;
             }
 
@@ -349,17 +323,8 @@
         
     </div>
 
-    <div id="cookieBanner" class="cookie-banner">
-        <span>Me no spy with cookies...</span>
-        <img src="cookie3-gold-128.png" alt="Cookie">
-        <span>Me eat them!</span>
-    </div>
-
-    <div id="edgeTooltip">☢️ WARNING: Radioactive! ☢️ <br> Keeping this website open <br> might fry your device!</div>
+    <div id="edgeTooltip"></div>
     
-    <!-- Sentinel for scroll detection -->
-    <div id="scrollSentinel" style="height: 1px; width: 100%; pointer-events: none; opacity: 0;"></div>
-
     <script src="script.js"></script>
 </body>
 
