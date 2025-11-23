@@ -253,6 +253,44 @@
                 0 -0.4px 0 #a020f0,
                 0 0.4px 0 #a020f0;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 20px 20px 20px;
+            }
+
+            .token-text {
+                height: auto;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 40px;
+                text-align: center;
+            }
+
+            .token-text img {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .center.left {
+                position: static;
+                transform: none;
+                left: auto;
+                text-align: center;
+            }
+            
+            .logo {
+                max-width: 90%; /* Slightly larger on mobile for readability */
+            }
+            
+            /* Adjust tooltip position for mobile */
+            .tooltip-text {
+                width: 280px;
+                margin-left: -140px;
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 
@@ -311,14 +349,34 @@
         const banner = document.getElementById('cookieBanner');
         const edgeTooltip = document.getElementById('edgeTooltip');
         let lastMouseY = 0;
+        let isScrolledToBottom = false;
+
+        function checkScroll() {
+            // Robust calculation for total document height
+            const body = document.body;
+            const html = document.documentElement;
+            
+            // Get the maximum height to ensure we cover all browser interpretations
+            const docHeight = Math.max(
+                body.scrollHeight, body.offsetHeight, 
+                html.clientHeight, html.scrollHeight, html.offsetHeight
+            );
+            
+            // Cross-browser scroll position
+            const scrollTop = window.pageYOffset || html.scrollTop || body.scrollTop || 0;
+            const windowHeight = window.innerHeight || html.clientHeight || body.clientHeight || 0;
+
+            // Generous buffer (100px)
+            isScrolledToBottom = (scrollTop + windowHeight) >= (docHeight - 100);
+            
+            // Update banner immediately in case mouse is already in position
+            updateBanner();
+        }
 
         function updateBanner() {
-            // Check if scrolled to bottom (within 20px)
-            // We use a small buffer because exact pixel matching can sometimes be off by fractional pixels
-            const isScrolledToBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 20;
-            
             // Check if mouse is near bottom (within 150px of viewport bottom)
-            const isMouseNearBottom = lastMouseY > (window.innerHeight - 150);
+            // Ensure lastMouseY is set
+            const isMouseNearBottom = lastMouseY > 0 && lastMouseY > (window.innerHeight - 150);
 
             if (isScrolledToBottom && isMouseNearBottom) {
                 banner.classList.add('show');
@@ -327,10 +385,14 @@
             }
         }
 
-        window.addEventListener('scroll', () => {
-            updateBanner();
-        });
-
+        // Initialize state immediately and on load
+        checkScroll();
+        window.addEventListener('load', checkScroll);
+        
+        // Update state on interactions
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('resize', checkScroll);
+        
         window.addEventListener('mousemove', (e) => {
             lastMouseY = e.clientY;
             updateBanner();
