@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const isNearBottom = clientY > (viewportHeight - bottomThreshold);
 
             if (isNearBottom || isTouchDevice) {
-                banner.classList.add('show');
+                banner.style.display = 'flex';
             } else {
-                banner.classList.remove('show');
+                banner.style.display = 'none';
             }
         }
     }
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // For touch devices, trigger immediately
     if (isTouchDevice && banner) {
-        banner.classList.add('show');
+        banner.style.display = 'flex';
     }
 });
 

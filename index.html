@@ -132,19 +132,17 @@
 
         .cookie-banner {
             position: fixed;
-            bottom: -120px; /* Start hidden below screen */
+            bottom: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.2); /* Original 20% opacity */
-            display: flex;
+            background-color: rgba(0, 0, 0, 0.2);
+            
+            /* Initially hidden, toggled via JS display property like tooltips */
+            display: none;
+            
             align-items: center;
             justify-content: center;
             padding: 5px 0;
-            
-            /* Animation: Slide up using bottom property (original mechanic) */
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            
-            /* Z-index must be higher than site-frame (9999) */
             z-index: 10001;
             
             /* Match body text style */
@@ -159,10 +157,6 @@
                 0.4px 0 0 #a020f0,
                 0 -0.4px 0 #a020f0,
                 0 0.4px 0 #a020f0;
-        }
-
-        .cookie-banner.show {
-            bottom: 0; /* Slide up to bottom edge */
         }
 
         .cookie-banner img {
