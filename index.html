@@ -132,24 +132,31 @@
 
         .cookie-banner {
             position: fixed;
-            bottom: 0;
+            bottom: 20px;
             left: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
+            right: 0;
+            margin: 0 auto; /* Center horizontally without transform */
+            width: max-content;
+            max-width: 90%;
+            
+            background-color: rgba(18, 18, 18, 0.95);
+            border: 2px solid #a020f0;
+            border-radius: 50px;
+            
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px 0;
+            padding: 10px 30px;
             
-            /* Animation: Slide up using transform instead of bottom property */
-            transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Animation: Simple fade in/out */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s;
             
-            /* Z-index must be higher than site-frame (9999) */
             z-index: 10001;
             
             /* Match body text style */
-            font-size: 23px;
+            font-size: 20px;
             color: transparent;
             text-shadow: 0 0 0 #C1A100,
                 -0.4px -0.4px 0 #a020f0,
@@ -160,10 +167,14 @@
                 0.4px 0 0 #a020f0,
                 0 -0.4px 0 #a020f0,
                 0 0.4px 0 #a020f0;
+            
+            /* Add glow */
+            box-shadow: 0 0 15px rgba(160, 32, 240, 0.3);
         }
 
         .cookie-banner.show {
-            transform: translateY(-10px); /* Slide up into view with slight buffer */
+            opacity: 1;
+            visibility: visible;
         }
 
         .cookie-banner img {
