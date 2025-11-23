@@ -42,6 +42,12 @@
             flex-grow: 1;
             position: relative;  /* For z-index stacking */
             z-index: 2;         /* Place above background text */
+            animation: slow-rotate 21600s linear infinite;
+        }
+
+        @keyframes slow-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
 
@@ -256,6 +262,14 @@
 
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
+            body {
+                font-size: 20px;
+            }
+
+            .cookie-banner {
+                font-size: 20px;
+            }
+
             .container {
                 padding: 80px 20px 20px 20px;
             }
@@ -288,7 +302,7 @@
             .tooltip-text {
                 width: 280px;
                 margin-left: -140px;
-                font-size: 16px;
+                font-size: 14px;
             }
         }
     </style>
@@ -343,56 +357,49 @@
     </div>
 
     <div id="edgeTooltip">☢️ WARNING: Radioactive! ☢️ <br> Keeping this website open <br> might fry your device!</div>
+    
+    <!-- Sentinel for scroll detection -->
+    <div id="scrollSentinel" style="height: 1px; width: 100%; pointer-events: none; opacity: 0;"></div>
 
     <script>
         // Cookie Banner Logic
         const banner = document.getElementById('cookieBanner');
         const edgeTooltip = document.getElementById('edgeTooltip');
+        const sentinel = document.getElementById('scrollSentinel');
+        
         let lastMouseY = 0;
         let isScrolledToBottom = false;
+        // Detect touch devices to bypass mouse check on mobile
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-        function checkScroll() {
-            // Robust calculation for total document height
-            const body = document.body;
-            const html = document.documentElement;
-            
-            // Get the maximum height to ensure we cover all browser interpretations
-            const docHeight = Math.max(
-                body.scrollHeight, body.offsetHeight, 
-                html.clientHeight, html.scrollHeight, html.offsetHeight
-            );
-            
-            // Cross-browser scroll position
-            const scrollTop = window.pageYOffset || html.scrollTop || body.scrollTop || 0;
-            const windowHeight = window.innerHeight || html.clientHeight || body.clientHeight || 0;
-
-            // Generous buffer (100px)
-            isScrolledToBottom = (scrollTop + windowHeight) >= (docHeight - 100);
-            
-            // Update banner immediately in case mouse is already in position
+        // Use IntersectionObserver for reliable scroll-to-bottom detection
+        const observer = new IntersectionObserver((entries) => {
+            // Update state
+            isScrolledToBottom = entries[0].isIntersecting;
             updateBanner();
-        }
+        }, {
+            root: null,
+            rootMargin: '200px', // Generous buffer: trigger when within 200px of bottom
+            threshold: 0
+        });
+        
+        observer.observe(sentinel);
 
         function updateBanner() {
-            // Check if mouse is near bottom (within 150px of viewport bottom)
-            // Ensure lastMouseY is set
-            const isMouseNearBottom = lastMouseY > 0 && lastMouseY > (window.innerHeight - 150);
+            // On touch devices, only check scroll. On desktop, check scroll + mouse position.
+            // For mouse: Check if near bottom (within 150px) OR if mouse hasn't moved yet (0) but we are scrolled to bottom (edge case)
+            // Actually, strictly requiring mouse movement ensures we don't annoy user unless they go there.
+            
+            const isMouseConditionMet = isTouchDevice || (lastMouseY > (window.innerHeight - 150));
 
-            if (isScrolledToBottom && isMouseNearBottom) {
+            if (isScrolledToBottom && isMouseConditionMet) {
                 banner.classList.add('show');
             } else {
                 banner.classList.remove('show');
             }
         }
 
-        // Initialize state immediately and on load
-        checkScroll();
-        window.addEventListener('load', checkScroll);
-        
-        // Update state on interactions
-        window.addEventListener('scroll', checkScroll);
-        window.addEventListener('resize', checkScroll);
-        
+        // Still track mouse for desktop users
         window.addEventListener('mousemove', (e) => {
             lastMouseY = e.clientY;
             updateBanner();
