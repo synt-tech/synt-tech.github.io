@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const edgeTooltip = document.getElementById('edgeTooltip');
     
     // Messages
-    const radioactiveText = '☢️ WARNING: Radioactive! ☢️ <br> Keeping this website open <br> might fry your device!';
-    const cookieText = '<div style="display: flex; align-items: center; text-align: right;"><div>Me no spy with cookies...<br>Me eat them!</div><img src="cookie3-gold-128.png" alt="Cookie" class="cookie-img"></div>';
+    const radioactiveText = '☢️ WARNING: radioactive! ☢️ <br> keeping this website open <br> might fry your device!';
+    const cookieText = '<div style="display: flex; align-items: center; text-align: right;"><div>me no spy with cookies...<br>me eat them!</div><img src="cookie3-gold-128.png" alt="Cookie" class="cookie-img"></div>';
 
     // Detect touch devices
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
