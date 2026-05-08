@@ -178,7 +178,7 @@ function createBackgroundTexts() {
             
             const textElement = document.createElement('div');
             textElement.className = 'background-text';
-            textElement.textContent = '🚀6.67% yield!🚀';
+            textElement.textContent = '🚀6.88% yield!🚀';
             textElement.style.left = `${randomX}px`;
             textElement.style.top = `${randomY}px`;
             textElement.style.transform = `rotate(${rotation}deg)`;
