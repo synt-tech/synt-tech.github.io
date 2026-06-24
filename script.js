@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Read sUSD yield from meta tag (single source of truth)
+    const yieldMeta = document.querySelector('meta[name="susd-yield"]');
+    if (!yieldMeta) {
+        console.error('susd-yield meta tag not found');
+        return;
+    }
+    const susdYield = yieldMeta.getAttribute('content');
+    const yieldValue = document.getElementById('susdYieldValue');
+    if (yieldValue) {
+        yieldValue.textContent = susdYield;
+    }
+
     // Edge Tooltip (handles both Radioactive warning and Cookie message)
     const edgeTooltip = document.getElementById('edgeTooltip');
     
@@ -143,6 +155,10 @@ function createBackgroundTexts() {
     if (!container) return;
 
     container.innerHTML = ''; // Clear existing texts
+
+    const yieldMeta = document.querySelector('meta[name="susd-yield"]');
+    if (!yieldMeta) return;
+    const yieldText = `🚀${yieldMeta.getAttribute('content')}% yield!🚀`;
     
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -178,7 +194,7 @@ function createBackgroundTexts() {
             
             const textElement = document.createElement('div');
             textElement.className = 'background-text';
-            textElement.textContent = '🚀6.88% yield!🚀';
+            textElement.textContent = yieldText;
             textElement.style.left = `${randomX}px`;
             textElement.style.top = `${randomY}px`;
             textElement.style.transform = `rotate(${rotation}deg)`;
